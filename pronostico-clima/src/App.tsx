@@ -34,7 +34,7 @@ const getWeatherPhrase = (isDay: boolean, rain: number, snowfall: number) => {
 function AvatarModel() {
   const { scene, animations } = useGLTF('/hongo2.glb');
   const { actions } = useAnimations(animations, scene);
-  const group = useRef<any>();
+  const group = useRef<any>(null);
 
   useEffect(() => {
     // Reproducir la animación base
@@ -408,6 +408,18 @@ function App() {
               </Suspense>
               <OrbitControls enableZoom={false} enableRotate={false} enablePan={false} />
             </Canvas>
+
+            {/* Créditos del Modelo 3D */}
+            <div className="absolute bottom-2 right-4 z-20">
+              <a 
+                href="https://www.artstation.com/blackstercat" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="text-white/30 hover:text-white/80 text-[10px] md:text-xs font-light tracking-wide transition-colors"
+              >
+                Avatar by Blackstercat
+              </a>
+            </div>
           </div>
         </div>
 
