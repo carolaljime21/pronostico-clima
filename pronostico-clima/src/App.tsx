@@ -278,7 +278,7 @@ function App() {
         <div className="relative z-10 w-full mx-auto flex-1 flex flex-col lg:flex-row gap-6 lg:gap-8 items-center lg:items-stretch justify-center pb-6">
         
         {/* COLUMNA IZQUIERDA: Weekly Summary */}
-        <div className="w-full lg:w-[22%] lg:flex-none flex flex-col rounded-[2rem] bg-white/10 backdrop-blur-md border border-white/20 shadow-2xl text-white p-6 justify-between h-auto lg:h-full min-h-[400px]">
+        <div className="w-full lg:w-[25%] lg:flex-none flex flex-col rounded-[2rem] bg-white/10 backdrop-blur-md border border-white/20 shadow-2xl text-white p-6 justify-between h-auto lg:h-full min-h-[400px]">
           <h3 className="text-white/80 text-sm uppercase tracking-widest font-bold mb-2 ml-2 flex-none">Pronóstico de 7 días</h3>
           
           <div className="flex-1 flex flex-col justify-between">
@@ -387,7 +387,7 @@ function App() {
       </div>
       
       {/* FOOTER */}
-      <div className="absolute bottom-3 left-0 w-full text-center z-10">
+      <div className="relative lg:absolute lg:bottom-3 lg:left-0 w-full text-center z-10 py-4 lg:py-0">
         <p className="text-white/50 text-xs md:text-sm font-light drop-shadow-md">
           <a href="https://carolina-portafolio.vercel.app/" target="_blank" rel="noopener noreferrer" className="text-white/80 hover:text-white hover:underline transition-colors">Conoce a la creadora</a>
         </p>
