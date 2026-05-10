@@ -1,9 +1,9 @@
-import { useState, useEffect, useRef, Suspense } from 'react'
+import { useState, useEffect, useRef, Suspense, lazy } from 'react'
 import { Sun, Moon, CloudRain, CloudSnow, Sunrise, Sunset, MapPin, ChevronLeft, ChevronRight } from 'lucide-react'
-import { Canvas } from '@react-three/fiber'
-import { OrbitControls, useGLTF, Environment, useAnimations } from '@react-three/drei'
 import gsap from 'gsap'
 import './App.css'
+
+const AvatarScene = lazy(() => import('./AvatarScene'));
 
 const getWeatherIcon = (isDay: boolean, rain: number, snowfall: number, className = 'w-6 h-6') => {
   if (snowfall > 0) return <CloudSnow className={className} />;
@@ -29,50 +29,6 @@ const getWeatherPhrase = (isDay: boolean, rain: number, snowfall: number) => {
     ? 'El sol brilla hoy, ¡aprovecha y recarga energías! ☀️' 
     : 'Una noche tranquila y perfecta para descansar. 🌙✨';
 };
-
-// Componente para el modelo 3D del Avatar
-function AvatarModel() {
-  const { scene, animations } = useGLTF('/hongo2.glb');
-  const { actions } = useAnimations(animations, scene);
-  const group = useRef<any>(null);
-
-  useEffect(() => {
-    // Reproducir la animación base
-    if (actions && actions['base']) {
-      actions['base'].play();
-    }
-
-    if (group.current) {
-      gsap.fromTo(group.current.scale, 
-        { x: 0, y: 0, z: 0 },
-        {
-          x: 1, y: 1, z: 1,
-          duration: 1.5,
-          ease: 'elastic.out(1, 0.5)',
-          delay: 0.5,
-          overwrite: 'auto'
-        }
-      );
-      gsap.fromTo(group.current.position, 
-        { y: -3 },
-        {
-          y: -1.8,
-          duration: 1.5,
-          ease: 'power3.out',
-          delay: 0.5,
-          overwrite: 'auto'
-        }
-      );
-    }
-  }, [actions]);
-
-  return (
-    <group ref={group}>
-      {/* Set explicit base scale on the primitive so it's immune to cache weirdness */}
-      <primitive object={scene} scale={1.8} />
-    </group>
-  );
-}
 
 function App() {
   const [coords, setCoords] = useState<{lat: number, lon: number} | null>(null);
@@ -418,15 +374,9 @@ function App() {
 
           {/* Contenedor del Avatar 3D */}
           <div className="stagger-card flex-1 w-full min-h-[350px] relative rounded-[2rem] bg-transparent opacity-0 flex items-center justify-center overflow-visible z-10">
-            <Canvas dpr={[1, 2]} camera={{ position: [0, 0, 6.5], fov: 40 }} style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}>
-              <ambientLight intensity={1.5} />
-              <directionalLight position={[10, 10, 5]} intensity={2} />
-              <Environment preset="city" />
-              <Suspense fallback={null}>
-                <AvatarModel />
-              </Suspense>
-              <OrbitControls enableZoom={false} enableRotate={false} enablePan={false} />
-            </Canvas>
+            <Suspense fallback={null}>
+              <AvatarScene />
+            </Suspense>
 
             {/* Créditos del Modelo 3D */}
             <div className="absolute bottom-2 right-4 z-20">
@@ -454,7 +404,5 @@ function App() {
     </>
   )
 }
-
-useGLTF.preload('/hongo2.glb')
 
 export default App
