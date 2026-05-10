@@ -188,11 +188,13 @@ function App() {
       document.body.style.backgroundRepeat = 'no-repeat';
       document.body.style.transition = 'background-image 0.5s ease-in-out';
       
-      // Animar las tarjetas una vez que hay data y ya no estamos en loading
-      gsap.fromTo('.stagger-card', 
-        { y: 40, opacity: 0 }, 
-        { y: 0, opacity: 1, duration: 0.8, stagger: 0.15, ease: 'power3.out', overwrite: 'auto' }
-      );
+      // Dar un pequeño respiro (250ms) para que WebGL compile los shaders del modelo 3D antes de animar
+      setTimeout(() => {
+        gsap.fromTo('.stagger-card', 
+          { y: 40, opacity: 0 }, 
+          { y: 0, opacity: 1, duration: 0.8, stagger: 0.15, ease: 'power3.out', overwrite: 'auto' }
+        );
+      }, 250);
     } else if (!weatherData) {
       document.body.style.backgroundImage = 'none';
     }
@@ -221,8 +223,25 @@ function App() {
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center text-white bg-black/40 backdrop-blur-sm">
-        <p className="text-xl text-red-400 font-light">{error}</p>
+      <div className="min-h-screen w-full flex flex-col items-center justify-center text-white bg-gradient-to-br from-[#0f172a] to-[#1e1b4b] p-6 text-center absolute inset-0 z-50">
+        <div className="absolute top-6 left-6 md:top-8 md:left-10 z-30 flex items-center gap-3">
+          <img src="/images/logo.png" alt="MyKumo Logo" className="w-8 h-8 md:w-10 md:h-10 drop-shadow-md object-contain" />
+          <h1 className="text-white text-xl md:text-2xl font-bold tracking-widest drop-shadow-md">MyKumo</h1>
+        </div>
+
+        <div className="bg-white/10 p-8 md:p-12 rounded-[2rem] border border-white/20 backdrop-blur-xl shadow-2xl max-w-lg w-full">
+          <MapPin className="w-16 h-16 text-white/50 mx-auto mb-6" />
+          <h2 className="text-2xl md:text-3xl font-light text-white mb-4">Ubicación Necesaria</h2>
+          <p className="text-white/70 text-base md:text-lg font-light leading-relaxed">
+            Para poder mostrarte el pronóstico exacto del clima y disfrutar del entorno 3D, MyKumo requiere que permitas el acceso a tu ubicación en el navegador.
+          </p>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="mt-8 px-8 py-3 bg-white/20 hover:bg-white/30 text-white rounded-xl transition-colors font-medium shadow-lg"
+          >
+            Conceder Permiso / Reintentar
+          </button>
+        </div>
       </div>
     );
   }
@@ -299,8 +318,8 @@ function App() {
         </div>
       )}
 
-      <div className="h-screen w-full overflow-hidden flex flex-col p-4 md:p-6 lg:p-8 relative">
-        <div className="absolute inset-0 bg-black/20 backdrop-blur-[2px] z-0 pointer-events-none"></div>
+      <div className="h-auto min-h-screen lg:h-screen w-full overflow-x-hidden overflow-y-auto lg:overflow-hidden flex flex-col p-4 md:p-6 lg:p-8 relative">
+        <div className="fixed inset-0 bg-black/20 backdrop-blur-[2px] z-0 pointer-events-none"></div>
 
         {/* BRANDING: MyKumo (Flow Layout) */}
         <div className="relative z-20 flex items-center gap-3 stagger-card opacity-0 mb-2 md:mb-4 w-full max-w-[90rem] mx-auto">
@@ -311,7 +330,7 @@ function App() {
         <div className="relative z-10 w-full max-w-[90rem] mx-auto flex-1 flex flex-col lg:flex-row gap-6 lg:gap-8 items-center lg:items-stretch justify-center pb-6">
         
         {/* COLUMNA IZQUIERDA: Weekly Summary */}
-        <div className="stagger-card flex-1 w-full max-w-sm flex flex-col rounded-[2rem] bg-white/10 backdrop-blur-md border border-white/20 shadow-2xl text-white p-6 justify-between h-full opacity-0">
+        <div className="stagger-card flex-1 w-full max-w-md xl:max-w-sm flex flex-col rounded-[2rem] bg-white/10 backdrop-blur-md border border-white/20 shadow-2xl text-white p-6 justify-between h-auto lg:h-full opacity-0 min-h-[400px]">
           <h3 className="text-white/80 text-sm uppercase tracking-widest font-bold mb-2 ml-2 flex-none">Pronóstico de 7 días</h3>
           
           <div className="flex-1 flex flex-col justify-between">
@@ -391,7 +410,7 @@ function App() {
         </div>
 
         {/* COLUMNA DERECHA: Frase y Avatar 3D */}
-        <div className="flex-1 flex flex-col gap-6 justify-center items-center w-full max-w-sm h-full">
+        <div className="flex-1 flex flex-col gap-6 justify-center items-center w-full max-w-md xl:max-w-sm h-auto lg:h-full">
           {/* Frase Dinámica */}
           <div className="stagger-card w-full p-6 rounded-[2rem] bg-white/5 backdrop-blur-sm border border-white/10 shadow-lg text-white text-center text-xl font-light italic opacity-90 z-20 opacity-0">
             "{getWeatherPhrase(isDay, current.rain + current.showers, current.snowfall)}"
@@ -399,7 +418,7 @@ function App() {
 
           {/* Contenedor del Avatar 3D */}
           <div className="stagger-card flex-1 w-full min-h-[350px] relative rounded-[2rem] bg-transparent opacity-0 flex items-center justify-center overflow-visible z-10">
-            <Canvas camera={{ position: [0, 0, 6.5], fov: 40 }} style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}>
+            <Canvas dpr={[1, 2]} camera={{ position: [0, 0, 6.5], fov: 40 }} style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}>
               <ambientLight intensity={1.5} />
               <directionalLight position={[10, 10, 5]} intensity={2} />
               <Environment preset="city" />
@@ -426,8 +445,8 @@ function App() {
       </div>
       
       {/* FOOTER */}
-      <div className="absolute bottom-3 left-0 w-full text-center z-10">
-        <p className="text-white/50 text-xs md:text-sm font-light">
+      <div className="relative mt-auto pt-6 pb-2 w-full text-center z-10">
+        <p className="text-white/50 text-xs md:text-sm font-light drop-shadow-md">
           Creado por: <a href="https://carolina-portafolio.vercel.app/" target="_blank" rel="noopener noreferrer" className="text-white/80 hover:text-white hover:underline transition-colors">Carolina</a>
         </p>
       </div>
@@ -435,5 +454,7 @@ function App() {
     </>
   )
 }
+
+useGLTF.preload('/hongo2.glb')
 
 export default App
