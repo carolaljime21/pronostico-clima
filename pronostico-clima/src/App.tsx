@@ -318,7 +318,7 @@ function App() {
         </div>
       )}
 
-      <div className="h-auto min-h-screen lg:h-screen w-full overflow-x-hidden overflow-y-auto lg:overflow-hidden flex flex-col p-4 md:p-6 lg:p-8 relative">
+      <div className="h-auto min-h-screen lg:h-screen w-full overflow-x-hidden overflow-y-auto lg:overflow-hidden flex flex-col p-4 md:p-6 lg:p-8 pb-12 lg:pb-8 relative">
         <div className="fixed inset-0 bg-black/20 backdrop-blur-[2px] z-0 pointer-events-none"></div>
 
         {/* BRANDING: MyKumo (Flow Layout) */}
@@ -445,9 +445,9 @@ function App() {
       </div>
       
       {/* FOOTER */}
-      <div className="relative mt-auto pt-6 pb-2 w-full text-center z-10">
+      <div className="absolute bottom-3 left-0 w-full text-center z-10">
         <p className="text-white/50 text-xs md:text-sm font-light drop-shadow-md">
-          Creado por: <a href="https://carolina-portafolio.vercel.app/" target="_blank" rel="noopener noreferrer" className="text-white/80 hover:text-white hover:underline transition-colors">Carolina</a>
+          <a href="https://carolina-portafolio.vercel.app/" target="_blank" rel="noopener noreferrer" className="text-white/80 hover:text-white hover:underline transition-colors">Conoce a la creadora</a>
         </p>
       </div>
     </div>
