@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef, Suspense, lazy } from 'react'
 import { Sun, Moon, CloudRain, CloudSnow, Sunrise, Sunset, MapPin, ChevronLeft, ChevronRight } from 'lucide-react'
-import gsap from 'gsap'
 import './App.css'
 
 const AvatarScene = lazy(() => import('./AvatarScene'));
@@ -143,14 +142,7 @@ function App() {
       document.body.style.backgroundAttachment = 'fixed';
       document.body.style.backgroundRepeat = 'no-repeat';
       document.body.style.transition = 'background-image 0.5s ease-in-out';
-      
-      // Dar un pequeño respiro (250ms) para que WebGL compile los shaders del modelo 3D antes de animar
-      setTimeout(() => {
-        gsap.fromTo('.stagger-card', 
-          { y: 40, opacity: 0 }, 
-          { y: 0, opacity: 1, duration: 0.8, stagger: 0.15, ease: 'power3.out', overwrite: 'auto' }
-        );
-      }, 250);
+      // Ya no hay animaciones de entrada, el UI aparece instantáneamente
     } else if (!weatherData) {
       document.body.style.backgroundImage = 'none';
     }
@@ -274,19 +266,19 @@ function App() {
         </div>
       )}
 
-      <div className="h-auto min-h-screen lg:h-screen w-full overflow-x-hidden overflow-y-auto lg:overflow-hidden flex flex-col p-4 md:p-6 lg:p-8 pb-12 lg:pb-8 relative">
+      <div className="h-auto min-h-screen lg:h-screen w-full overflow-x-hidden overflow-y-auto lg:overflow-hidden flex flex-col px-6 md:px-10 lg:px-14 py-4 md:py-6 lg:py-8 pb-12 lg:pb-8 relative">
         <div className="fixed inset-0 bg-black/20 backdrop-blur-[2px] z-0 pointer-events-none"></div>
 
         {/* BRANDING: MyKumo (Flow Layout) */}
-        <div className="relative z-20 flex items-center gap-3 stagger-card opacity-0 mb-2 md:mb-4 w-full max-w-[90rem] mx-auto">
+        <div className="relative z-20 flex items-center gap-3 mb-2 md:mb-4 w-full mx-auto">
           <img src="/images/logo.png" alt="MyKumo Logo" className="w-8 h-8 md:w-10 md:h-10 drop-shadow-md object-contain" />
           <h1 className="text-white text-xl md:text-2xl font-bold tracking-widest drop-shadow-md">MyKumo</h1>
         </div>
 
-        <div className="relative z-10 w-full max-w-[90rem] mx-auto flex-1 flex flex-col lg:flex-row gap-6 lg:gap-8 items-center lg:items-stretch justify-center pb-6">
+        <div className="relative z-10 w-full mx-auto flex-1 flex flex-col lg:flex-row gap-6 lg:gap-8 items-center lg:items-stretch justify-center pb-6">
         
         {/* COLUMNA IZQUIERDA: Weekly Summary */}
-        <div className="stagger-card flex-1 w-full max-w-md xl:max-w-sm flex flex-col rounded-[2rem] bg-white/10 backdrop-blur-md border border-white/20 shadow-2xl text-white p-6 justify-between h-auto lg:h-full opacity-0 min-h-[400px]">
+        <div className="w-full lg:w-[22%] lg:flex-none flex flex-col rounded-[2rem] bg-white/10 backdrop-blur-md border border-white/20 shadow-2xl text-white p-6 justify-between h-auto lg:h-full min-h-[400px]">
           <h3 className="text-white/80 text-sm uppercase tracking-widest font-bold mb-2 ml-2 flex-none">Pronóstico de 7 días</h3>
           
           <div className="flex-1 flex flex-col justify-between">
@@ -313,9 +305,9 @@ function App() {
         </div>
 
         {/* COLUMNA CENTRAL: Hero Card y Hourly Scroll Carrusel */}
-        <div className="flex-1 flex flex-col gap-6 justify-center w-full max-w-md h-full">
+        <div className="w-full lg:w-[45%] lg:flex-none flex flex-col gap-6 justify-center h-full">
           {/* 1. Hero Card */}
-          <div className="stagger-card flex-1 w-full relative overflow-hidden flex flex-col items-center justify-center p-10 rounded-[2rem] bg-white/10 backdrop-blur-md border border-white/20 shadow-2xl text-white opacity-0 min-h-[300px]">
+          <div className="flex-1 w-full relative overflow-hidden flex flex-col items-center justify-center p-10 rounded-[2rem] bg-white/10 backdrop-blur-md border border-white/20 shadow-2xl text-white min-h-[300px]">
             {getHeroDecoration(isDay, current.rain + current.showers, current.snowfall)}
             
             {userName && (
@@ -340,7 +332,7 @@ function App() {
           </div>
 
           {/* 2. Hourly Scroll (Carrusel interactivo) */}
-          <div className="stagger-card w-full flex-none opacity-0 flex flex-col gap-2">
+          <div className="w-full flex-none flex flex-col gap-2">
             <div className="flex items-center justify-between px-2 w-full">
               <button onClick={scrollLeft} className="p-2 hover:bg-white/20 transition-colors bg-white/10 rounded-full backdrop-blur-md text-white/80 hover:text-white border border-white/10 shadow-lg shrink-0">
                 <ChevronLeft className="w-5 h-5" />
@@ -366,14 +358,14 @@ function App() {
         </div>
 
         {/* COLUMNA DERECHA: Frase y Avatar 3D */}
-        <div className="flex-1 flex flex-col gap-6 justify-center items-center w-full max-w-md xl:max-w-sm h-auto lg:h-full">
+        <div className="w-full lg:w-[30%] lg:flex-none flex flex-col gap-6 justify-center items-center h-auto lg:h-full">
           {/* Frase Dinámica */}
-          <div className="stagger-card w-full p-6 rounded-[2rem] bg-white/5 backdrop-blur-sm border border-white/10 shadow-lg text-white text-center text-xl font-light italic opacity-90 z-20 opacity-0">
+          <div className="w-full p-6 rounded-[2rem] bg-white/5 backdrop-blur-sm border border-white/10 shadow-lg text-white text-center text-xl font-light italic opacity-90 z-20">
             "{getWeatherPhrase(isDay, current.rain + current.showers, current.snowfall)}"
           </div>
 
           {/* Contenedor del Avatar 3D */}
-          <div className="stagger-card flex-1 w-full min-h-[350px] relative rounded-[2rem] bg-transparent opacity-0 flex items-center justify-center overflow-visible z-10">
+          <div className="flex-1 w-full min-h-[350px] relative rounded-[2rem] bg-transparent flex items-center justify-center overflow-visible z-10">
             <Suspense fallback={null}>
               <AvatarScene />
             </Suspense>
